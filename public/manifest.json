@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Mapster",
+  "name": "Your map app in the ottan",
   "icons": [
     {
       "src": "favicon.ico",
