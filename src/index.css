@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+header {
+    padding: 1rem;
+    background-color: #157cb8;
+    text-align: center;
+    width: 100%;
+}
+
+main {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.map {
+    position: relative;
+}
+
+.geolocate-control {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
