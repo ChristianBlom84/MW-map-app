@@ -37,6 +37,7 @@ const darkskyOptions =
   '?exclude=currently,minutely,hourly,alerts,flags&units=auto';
 const corsProxy = process.env.REACT_APP_CORS_PROXY || '';
 const wikiUrl = process.env.REACT_APP_WIKIPEDIA_SUMMARY_BASE_URL || '';
+const wikiRelatedUrl = process.env.REACT_APP_WIKIPEDIA_RELATED_BASE_URL || '';
 
 const Map: React.FC = () => {
   const [viewport, setViewPort] = useState({
@@ -69,6 +70,7 @@ const Map: React.FC = () => {
     country: WikiSummary;
   }>({
     place: {
+      type: '',
       thumbnail: {
         source: '',
         width: 0,
@@ -78,6 +80,7 @@ const Map: React.FC = () => {
       extract: ''
     },
     country: {
+      type: '',
       thumbnail: {
         source: '',
         width: 0,
@@ -152,6 +155,12 @@ const Map: React.FC = () => {
     try {
       const searchResult = await axios.get(`${wikiUrl}/${wikiTitle}`);
 
+      if (searchResult.data.type === 'disambiguation') {
+        const relatedData = await axios.get(`${wikiRelatedUrl}/${wikiTitle}`);
+
+        return relatedData.data.pages[0];
+      }
+
       return searchResult.data;
     } catch (err) {
       return err;
@@ -163,11 +172,11 @@ const Map: React.FC = () => {
     latitude: number
   ): Promise<WeatherData> => {
     try {
-      const weather: WeatherData = await axios.get(
+      const weather = await axios.get(
         `${corsProxy}${darkskyApiBase}/${darkskyToken}/${latitude},${longitude}/${darkskyOptions}`
       );
 
-      return weather;
+      return weather.data;
     } catch (err) {
       return err;
     }
@@ -181,34 +190,63 @@ const Map: React.FC = () => {
 
   const handleClick = async (e: PointerEvent): Promise<void> => {
     setModalData({
-      ...modalData,
       cursorX: e.offsetCenter.x,
-      cursorY: e.offsetCenter.y
+      cursorY: e.offsetCenter.y,
+      mapHeight: e.target.clientHeight,
+      mapWidth: e.target.clientWidth
     });
     setIsOpen(true);
     setLoading(true);
-    console.log('Event: ', e);
-    const locationName = await getLocationData(e.lngLat[0], e.lngLat[1]);
-    const weatherData = await getWeatherData(e.lngLat[0], e.lngLat[1]);
-    console.log(locationName);
-    const searchTerm =
-      locationName.data.features.length > 0
-        ? locationName.data.features[0].text
-        : '';
-    const searchResult = await getWikiInfo(searchTerm);
-    setWikiSummary({
-      ...searchResult
+    setLocationData({
+      data: {
+        type: '',
+        query: [],
+        features: []
+      }
     });
-    setWeatherData({ ...weatherData });
-    setLocationData(locationName);
-    if (locationName.data.features.length > 0) {
-      setModalData({
-        cursorX: e.offsetCenter.x,
-        cursorY: e.offsetCenter.y,
-        mapHeight: e.target.clientHeight,
-        mapWidth: e.target.clientWidth
+    const adjustedLngLat: number[] =
+      viewport.zoom < 7
+        ? [Number(e.lngLat[0].toFixed(4)), Number(e.lngLat[1].toFixed(4))]
+        : [e.lngLat[0], e.lngLat[1]];
+
+    console.log(adjustedLngLat);
+    try {
+      const locationName = await getLocationData(
+        adjustedLngLat[0],
+        adjustedLngLat[1]
+      );
+      console.log(locationName);
+
+      const placeSearchTerm =
+        locationName.data.features.length > 0
+          ? locationName.data.features[0].text
+          : '';
+      const countrySearchTerm =
+        locationName.data.features.length > 1
+          ? locationName.data.features[1].text
+          : locationName.data.features.length > 0
+          ? locationName.data.features[0].text
+          : '';
+
+      const [
+        placeSearchResult,
+        countrySearchResult,
+        weatherData
+      ] = await Promise.all([
+        getWikiInfo(placeSearchTerm),
+        getWikiInfo(countrySearchTerm),
+        getWeatherData(e.lngLat[0], e.lngLat[1])
+      ]);
+
+      setWikiSummary({
+        country: { ...countrySearchResult },
+        place: { ...placeSearchResult }
       });
+      setWeatherData({ ...weatherData });
+      setLocationData(locationName);
       setLoading(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -219,7 +257,7 @@ const Map: React.FC = () => {
         mapboxApiAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onViewportChange={_onViewportChange}
-        onClick={e => handleClick(e)}
+        onClick={(e): Promise<void> => handleClick(e)}
       >
         <div className="geolocate-control">
           <GeolocateControl
@@ -230,10 +268,7 @@ const Map: React.FC = () => {
       </ReactMapGL>
       {isOpen ? (
         <InfoModal
-          cursorX={cursorX}
-          cursorY={cursorY}
-          mapHeight={mapHeight}
-          mapWidth={mapWidth}
+          {...modalData}
           weatherData={weatherData}
           wikiSummary={wikiSummary}
           isOpen={isOpen}

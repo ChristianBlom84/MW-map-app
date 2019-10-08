@@ -35,6 +35,11 @@ main {
 
 .info-modal {
     position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
+    max-width: 20rem;
+    max-height: 30rem;
+    align-items: center;
     padding: 1rem;
     transition: height 2s, width 2s;
     background: white;
@@ -42,6 +47,45 @@ main {
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
     animation: slide-up 0.4s ease;
     overflow: hidden;
+    z-index: 1000;
+}
+
+.info-modal .flag {
+    max-width: 6rem;
+    margin-left: 2rem;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.info-modal h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.info-modal h3 {
+    font-size: 1rem;
+}
+
+.info-modal p {
+    font-size: 0.9rem;
+    max-height: 8rem;
+    overflow-y: auto;
+}
+
+.info-modal button {
+    background: white;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 1.3rem;
+    height: 1.3rem;
+    line-height: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    top: 0;
+    right: 0;
+    cursor: pointer;
 }
 
 @keyframes slide-up {
@@ -53,4 +97,21 @@ main {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Utility Classes */
+.flex {
+    display: flex;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
 }

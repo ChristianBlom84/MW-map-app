@@ -7,6 +7,7 @@ export interface WikiData {
 }
 
 export interface WikiSummary {
+  type: string;
   thumbnail: {
     source: string;
     width: number;

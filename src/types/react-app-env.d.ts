@@ -8,5 +8,6 @@ declare namespace NodeJS {
     REACT_APP_DARKSKY_API_BASE: string;
     REACT_APP_CORS_PROXY: string;
     REACT_APP_WIKIPEDIA_SUMMARY_BASE_URL: string;
+    REACT_APP_WIKIPEDIA_RELATED_BASE_URL: string;
   }
 }
