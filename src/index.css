@@ -6,6 +6,7 @@
 
 html {
     font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 header {
@@ -30,4 +31,26 @@ main {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+.info-modal {
+    position: absolute;
+    padding: 1rem;
+    transition: height 2s, width 2s;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+    animation: slide-up 0.4s ease;
+    overflow: hidden;
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
