@@ -10,12 +10,7 @@ import axios from 'axios';
 import InfoModal from '../InfoModal';
 
 // Types
-import {
-  WikiData,
-  WikiSummary,
-  WeatherData,
-  Location
-} from '../../types/map.types';
+import { WikiSummary, WeatherData, Location } from '../../types/map.types';
 
 // Styles
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -118,8 +113,6 @@ const Map: React.FC = () => {
   });
 
   const [loading, setLoading] = useState(true);
-
-  const { cursorX, cursorY, mapHeight, mapWidth } = modalData;
 
   const _onViewportChange = (viewport: ViewportProps): void =>
     setViewPort({

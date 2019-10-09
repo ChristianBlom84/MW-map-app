@@ -1,11 +1,3 @@
-export interface WikiData {
-  data: {
-    query: {
-      search: object[];
-    };
-  };
-}
-
 export interface WikiSummary {
   type: string;
   thumbnail: {
@@ -15,6 +7,7 @@ export interface WikiSummary {
   };
   description: string;
   extract: string;
+  loading?: boolean;
 }
 
 export interface FeatureObject {
@@ -27,6 +20,7 @@ export interface Location {
     query: number[];
     features: FeatureObject[];
   };
+  loading?: boolean;
 }
 
 export interface WeatherData {
@@ -35,6 +29,7 @@ export interface WeatherData {
     icon: string;
     data: WeatherDataDaily[];
   };
+  loading?: boolean;
 }
 
 interface WeatherDataDaily {
@@ -46,3 +41,16 @@ interface WeatherDataDaily {
   precipProbability: number;
   precipType: string;
 }
+
+export interface Store {
+  location: Location;
+  weather: WeatherData;
+  wikiSummary: WikiSummary;
+}
+
+// Action types
+
+export type WeatherAction = {
+  type: 'GET_LOCATION_DATA';
+  payload: Location;
+};

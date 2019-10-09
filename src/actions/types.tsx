@@ -1,3 +1,8 @@
-export const SET_ALERT = 'SET_ALERT';
-export const REMOVE_ALERT = 'REMOVE_ALERT';
-export const GET_MAP = 'GET_MAP';
+export const GET_LOCATION_DATA = 'GET_LOCATION_DATA';
+export type GET_LOCATION_DATA = typeof GET_LOCATION_DATA;
+
+export const GET_WEATHER_DATA = 'GET_WEATHER_DATA';
+export type GET_WEATHER_DATA = typeof GET_WEATHER_DATA;
+
+export const GET_WIKI_SUMMARY = 'GET_WIKI_SUMMARY';
+export type GET_WIKI_SUMMARY = typeof GET_WIKI_SUMMARY;
